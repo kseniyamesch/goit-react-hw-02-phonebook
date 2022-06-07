@@ -1,31 +1,35 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { nanoid } from 'nanoid';
 
 const INITIAL_STATE = {
-    name: '',
-}
+  name: '',
+  number: '',
+};
 
 const inputNameId = nanoid();
+const inputPhoneId = nanoid();
 
 export default class ContactForm extends Component {
-  state = {...INITIAL_STATE};
+  state = { ...INITIAL_STATE };
 
   handleCahnge = evt => {
     const { name, value } = evt.currentTarget;
-    this.setState({ [name]: value });
-    // console.log(evt.currentTarget.value)
+    // console.log({[name]})
+    this.setState({ [name]: value});
+    console.log(evt.currentTarget.value)
   };
 
   handleSubmit = evt => {
     evt.preventDefault();
-    this.props.onSubmit({...this.state})
+    this.props.onSubmit({ ...this.state });
     console.log(evt);
-this.reset();
+    this.reset();
   };
 
   reset = () => {
-    this.setState({name: '',})
-}
+    this.setState({ name: '', number: '', });
+  };
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
@@ -43,8 +47,24 @@ this.reset();
             onInput={this.handleCahnge}
           />
         </label>
+        <label htmlFor={inputPhoneId}>Number
+          <input
+            type="tel"
+            name="number"
+            value={this.state.number}
+            id= {inputPhoneId}
+            onInput={this.handleCahnge}
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+            required
+          />
+        </label>
         <button type="submit">Add contact</button>
       </form>
     );
   }
 }
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};

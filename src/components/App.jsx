@@ -1,13 +1,7 @@
+import { nanoid } from 'nanoid';
 import React, { Component } from 'react';
 import ContactForm from './ContactForm';
-
-// export const App = () => {
-//   return (
-//     <div>
-
-//     </div>
-//   );
-// };
+import ContactList from './ContactList/ContsctList';
 
 export class App extends Component {
   state = {
@@ -19,13 +13,28 @@ export class App extends Component {
     ],
   };
 
-
   formSubmitHandler = data => {
-    console.log(data);
+    // console.log(data);
+    // console.log(data.name)
+    // console.log(this.state.contacts)
+    // const idNumber = this.state.contacts.length+1;
+    // const contactId = `id-${idNumber}`
+
+    // console.log(idNumber);
+
+    const contact = {
+      id: nanoid(),
+      name: data.name, 
+      number: data.number,
+    }
+
+    console.log(contact)
+this.setState(prevState => {
+  return {contacts: [...prevState.contacts, contact]}
+  }, () => console.log(this.state))
+
 //     this.setState(prevState=> {
-//       const contact = {
-//         name: data.name,
-//         id: 1,
+
 //       }
 // console.log(prevState.contacts)
 // return ({...prevState}.contacts)
@@ -47,9 +56,7 @@ export class App extends Component {
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.formSubmitHandler}></ContactForm>
         <h2>Contacts</h2>
-        <ul>
-          <li></li>
-        </ul>
+<ContactList contacts={this.state.contacts}/>
       </div>
     );
   }
