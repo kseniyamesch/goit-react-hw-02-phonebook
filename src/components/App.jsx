@@ -1,7 +1,8 @@
 import { nanoid } from 'nanoid';
 import React, { Component } from 'react';
 import ContactForm from './ContactForm';
-import ContactList from './ContactList/ContsctList';
+import ContactList from './ContactList/ContactList';
+import Filter from './Filter';
 
 export class App extends Component {
   state = {
@@ -11,44 +12,46 @@ export class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
+    filter: '',
   };
 
   formSubmitHandler = data => {
-    // console.log(data);
-    // console.log(data.name)
-    // console.log(this.state.contacts)
-    // const idNumber = this.state.contacts.length+1;
-    // const contactId = `id-${idNumber}`
-
-    // console.log(idNumber);
-
     const contact = {
       id: nanoid(),
-      name: data.name, 
+      name: data.name,
       number: data.number,
+    };
+
+    if (
+      this.state.contacts.find(
+        contact => contact.name.toLowerCase() === data.name.toLowerCase()
+      )
+    ) {
+      return alert(`${data.name} is already in Contact List`);
     }
-
-    console.log(contact)
-this.setState(prevState => {
-  return {contacts: [...prevState.contacts, contact]}
-  }, () => console.log(this.state))
-
-//     this.setState(prevState=> {
-
-//       }
-// console.log(prevState.contacts)
-// return ({...prevState}.contacts)
-
-    // })
+    this.setState(prevState => {
+      return { contacts: [...prevState.contacts, contact] };
+    });
   };
 
-  // this.setState(prevState => {
-  //   // Если посмотреть состояние переданное callback-функции во время ее вызова,
-  //   // получим актуальное состояния на момент обновления.
-  //   console.log(prevState.value); // будет разный на каждой итерации
+  deleteItem = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
 
-  //   return { value: prevState.value + 1 };
-  // });
+  onFilter = evt => {
+    const { value } = evt.currentTarget;
+    this.setState({
+      filter: value.trim(),
+    });
+  };
+
+  renderContact = () => {
+    return this.state.contacts.filter(contact =>
+      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
+    );
+  };
 
   render() {
     return (
@@ -56,7 +59,11 @@ this.setState(prevState => {
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.formSubmitHandler}></ContactForm>
         <h2>Contacts</h2>
-<ContactList contacts={this.state.contacts}/>
+        <Filter filter={this.state.filter} onFilter={this.onFilter}></Filter>
+        <ContactList
+          contacts={this.renderContact()}
+          handleDelete={this.deleteItem}
+        />
       </div>
     );
   }

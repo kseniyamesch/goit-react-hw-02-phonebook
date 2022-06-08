@@ -1,0 +1,13 @@
+ul {
+    list-style: none;
+}
+
+li {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+li:not(:last-child) {
+    margin-bottom: 15px;
+}
