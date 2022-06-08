@@ -1,13 +1,13 @@
-ul {
+.ul {
     list-style: none;
 }
 
-li {
+.item {
     display: flex;
     justify-content: space-around;
     align-items: center;
 }
 
-li:not(:last-child) {
+.item:not(:last-child) {
     margin-bottom: 15px;
 }
